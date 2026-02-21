@@ -5,10 +5,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hive-mind-agent/hive-mind-agent.git"
+    "url": "git+https://github.com/log-wade/hive-mind-agent.git"
   },
-  "bugs": "https://github.com/hive-mind-agent/hive-mind-agent/issues",
-  "homepage": "https://github.com/hive-mind-agent/hive-mind-agent#readme",
+  "bugs": "https://github.com/log-wade/hive-mind-agent/issues",
+  "homepage": "https://github.com/log-wade/hive-mind-agent#readme",
   "keywords": [
     "hive-mind",
     "multi-agent",

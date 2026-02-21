@@ -17,7 +17,7 @@ cd /path/to/hive-mind-agent
 git add .
 git commit -m "Initial release: hive-mind orchestration for Cursor, CLI, MCP, API"
 git branch -M main
-git remote add origin https://github.com/YOUR_ORG/hive-mind-agent.git
+git remote add origin https://github.com/log-wade/hive-mind-agent.git
 git push -u origin main
 ```
 
