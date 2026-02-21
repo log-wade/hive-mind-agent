@@ -1,0 +1,10 @@
+context.md
+hive.config.json
+outcomes/
+nextgen-hive.code-workspace
+*.code-workspace
+.DS_Store
+node_modules/
+.git/
+.cursor/mcp.json
+.cursorignore

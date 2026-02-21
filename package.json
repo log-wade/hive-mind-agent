@@ -1,0 +1,36 @@
+{
+  "name": "hive-mind-agent",
+  "version": "1.0.0",
+  "description": "Model-agnostic, project-agnostic multi-agent hive orchestration for Cursor, CLI, MCP, and API",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hive-mind-agent/hive-mind-agent.git"
+  },
+  "bugs": "https://github.com/hive-mind-agent/hive-mind-agent/issues",
+  "homepage": "https://github.com/hive-mind-agent/hive-mind-agent#readme",
+  "keywords": [
+    "hive-mind",
+    "multi-agent",
+    "orchestration",
+    "cursor",
+    "mcp",
+    "llm",
+    "ai-agents"
+  ],
+  "type": "module",
+  "bin": { "hive": "./cli.mjs" },
+  "scripts": {
+    "hive:init": "node cli.mjs init",
+    "hive:advance": "node cli.mjs advance",
+    "mcp": "node mcp-server/index.mjs",
+    "api": "node api-server.mjs",
+    "pack": "npm pack --dry-run",
+    "skill:install": "node scripts/install-skill.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^3.23.0"
+  },
+  "engines": { "node": ">=18" }
+}

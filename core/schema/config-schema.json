@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hive-mind.dev/config",
+  "title": "Hive Config",
+  "description": "Configuration for hive-mind orchestration. Project-agnostic.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to this schema"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "targetProducts": {
+      "type": "array",
+      "description": "Products or projects the hive operates on",
+      "items": {
+        "type": "object",
+        "required": ["name", "path"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string", "description": "Absolute or relative path" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "workspaceRoots": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Root paths for the hive workspace"
+    },
+    "adapters": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["file", "postgres", "redis"] },
+            "options": { "type": "object" }
+          }
+        },
+        "outcome": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["file", "blob", "postgres"] },
+            "options": { "type": "object" }
+          }
+        },
+        "worker": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["cursor", "local", "http", "mcp"] },
+            "options": { "type": "object" }
+          }
+        },
+        "llm": {
+          "type": "object",
+          "properties": {
+            "type": { "enum": ["cursor", "anthropic", "openai", "ollama", "gemini"] },
+            "model": { "type": "string" },
+            "apiKeyEnv": { "type": "string" }
+          }
+        }
+      }
+    },
+    "taxonomyPath": {
+      "type": "string",
+      "description": "Path to custom agent taxonomy JSON"
+    },
+    "maxParallelTasks": {
+      "type": "number",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 10
+    },
+    "contextPath": {
+      "type": "string",
+      "default": "context.md"
+    },
+    "outcomesPath": {
+      "type": "string",
+      "default": "outcomes"
+    }
+  }
+}

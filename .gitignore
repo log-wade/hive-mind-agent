@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+.env
+.env.local
+*.code-workspace
+.cursor/mcp.json
+context.md
+hive.config.json
+outcomes/*.md

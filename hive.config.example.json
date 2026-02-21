@@ -1,0 +1,21 @@
+{
+  "$schema": "./core/schema/config-schema.json",
+  "version": 1,
+  "targetProducts": [
+    {
+      "name": "My Product",
+      "path": "/path/to/your-product",
+      "description": "Optional description"
+    }
+  ],
+  "workspaceRoots": ["/path/to/hive", "/path/to/product"],
+  "adapters": {
+    "context": { "type": "file", "options": {} },
+    "outcome": { "type": "file", "options": {} },
+    "worker": { "type": "cursor", "options": {} },
+    "llm": { "type": "cursor", "options": {} }
+  },
+  "maxParallelTasks": 3,
+  "contextPath": "context.md",
+  "outcomesPath": "outcomes"
+}

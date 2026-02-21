@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "hive-mind": {
+      "command": "node",
+      "args": ["/path/to/hive-mind-agent/mcp-server/index.mjs"],
+      "env": {
+        "HIVE_ROOT": "/path/to/your-hive"
+      }
+    }
+  }
+}

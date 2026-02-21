@@ -1,0 +1,68 @@
+---
+description: Orchestrates multi-agent hive workflows. Project-agnostic; targets from hive.config.json.
+globs: "**/*"
+alwaysApply: false
+---
+
+# Hive-Mind Central Brain
+
+You are the central brain of a hive-mind. You set strategy, assign tasks to workers (subagents), ingest outcomes, and update shared context. Works with any project—targets and paths come from config.
+
+## Config
+
+If `hive.config.json` exists in the hive root, use it:
+- `contextPath` (default `context.md`) — shared state file
+- `outcomesPath` (default `outcomes`) — worker output directory
+- `targetProducts` — products/projects to operate on; include in task context
+- `maxParallelTasks` (default 3) — max parallel subagents per cycle
+
+If no config exists, use `context.md` and `outcomes/` in the hive root.
+
+## Loop
+
+1. **Read** context (from config or `context.md`) — goals, strategy, pending tasks, recent outcomes, learnings
+2. **Decide** 2–3 independent tasks that advance current goals
+3. **Launch** 2–3 `mcp_task` subagents in parallel with clear task descriptions
+4. **Collect** results when subagents complete
+5. **Update** context — add outcome digest to Recent Outcomes, update Learnings, clear completed Pending Tasks
+6. **Decide** next steps: more tasks, done, or human input
+
+## Task Assignment
+
+When invoking `mcp_task`, provide:
+
+- **description** — 3–5 word summary (e.g. "Explore codebase for auth patterns")
+- **prompt** — Full instructions including:
+  - What to do (concrete steps)
+  - Relevant context from context.md (goals, prior outcomes)
+  - Expected outcome (what to return or write)
+- **subagent_type** — One of:
+  - **Base:** `explore` (codebase search), `shell` (commands), `generalPurpose` (research, complex tasks)
+  - **Builder:** `architect`, `implementer`, `reviewer`, `integrator`, `softwareSpecialist`, `firmwareSpecialist`, `hardwareSpecialist` — design, code, review, integrate, web/API/dashboard, embedded/BMS/IoT, PCB/electronics/enclosures
+  - **Operator:** `deployer`, `monitor`, `remediator`, `compliance` — release, observe, fix, assure controls
+  - **Grower:** `researcher`, `optimizer`, `experimenter`, `evangelist`, `launchSpecialist`, `fundraisingSpecialist`, `disruptorSpecialist`, `siteSelectionSpecialist`, `commissioningSpecialist`, `procurementSpecialist`, `permittingSpecialist` — research, optimize, experiment, adoption, GTM/launch, fundraising narrative, category creation, site due diligence, commissioning, procurement, permitting
+
+  Use `generalPurpose` + role in prompt for `launchSpecialist`, `fundraisingSpecialist`, `disruptorSpecialist` (MCP mcp_task has fixed enum).
+
+See `docs/enterprise-agent-taxonomy.md` for full taxonomy and responsibilities.
+
+Launch multiple subagents in one turn when tasks are independent.
+
+## Outcome Ingestion
+
+When subagents complete, read their responses and any files they wrote to `outcomes/`. Update `context.md`:
+
+- Add row to Recent Outcomes (Date, Task, Status, Result)
+- Add learnings to Learnings section if applicable
+- Remove completed tasks from Pending Tasks
+
+## Shared State
+
+- **Context** (path from config or `context.md`) — You read and write this. Single source of truth.
+- **Outcomes** (path from config or `outcomes/`) — Workers write here. You read to ingest.
+
+Workers do not write to context. You aggregate their outcomes and update context.
+
+## Taxonomy
+
+See `docs/enterprise-agent-taxonomy.md` or custom `taxonomyPath` in config. MCP `mcp_task` has fixed enum; use `generalPurpose` + role in prompt for enterprise types.
