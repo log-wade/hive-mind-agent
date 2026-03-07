@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NOC Hive — Product Brochure</title>
+  <meta name="description" content="NOC Hive: AI NOC brain for data center operators. Ingest, triage, act—24/7 incident response without a 24/7 human NOC. Integrates with DCIM, BMS, ticketing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08090a;
+      --bg-elevated: #0e1012;
+      --fg: #e8eaed;
+      --fg-muted: #9aa0a6;
+      --accent: #00c896;
+      --accent-dim: rgba(0, 200, 150, 0.15);
+      --border: #1c1f23;
+      --radius: 8px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); z-index: 0; }
+    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 4.5rem 0; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 1rem; }
+    h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); letter-spacing: -0.02em; margin: 0 0 1.5rem; }
+    h3 { font-size: 1.125rem; margin: 0 0 0.5rem; }
+    p { color: var(--fg-muted); margin: 0 0 1rem; max-width: 52ch; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .tag { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
+    .btn {
+      display: inline-block; font-family: var(--font-body); font-weight: 600; font-size: 0.9375rem;
+      padding: 0.75rem 1.5rem; border-radius: var(--radius); border: none; cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,200,150,0.25); text-decoration: none; }
+    .btn-secondary { background: var(--accent-dim); color: var(--accent); }
+    .btn-secondary:hover { background: rgba(0,200,150,0.25); text-decoration: none; }
+    nav {
+      display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; color: var(--fg); }
+    nav .logo:hover { text-decoration: none; color: var(--accent); }
+    nav .links { display: flex; gap: 1.5rem; align-items: center; }
+    nav .links a { color: var(--fg-muted); font-size: 0.9375rem; }
+    nav .links a:hover { color: var(--fg); }
+    .hero { padding: 5rem 0 6rem; text-align: left; }
+    .hero h1 { max-width: 22ch; }
+    .hero .sub { font-size: 1.25rem; color: var(--fg-muted); max-width: 60ch; margin-bottom: 2rem; }
+    .hero .ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .brochure-section { max-width: 52ch; }
+    .brochure-section ul { color: var(--fg-muted); margin: 0 0 1rem; padding-left: 1.25rem; }
+    .brochure-section li { margin-bottom: 0.5rem; }
+    footer { padding: 2rem 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer a { color: var(--fg-muted); font-size: 0.875rem; }
+    footer a:hover { color: var(--fg); }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="wrap">
+    <nav>
+      <a class="logo" href="/noc/">NOC Hive</a>
+      <div class="links">
+        <a href="/noc/">Landing</a>
+        <a href="/noc/#demo">Request demo</a>
+        <a href="/noc/manual.html">Manual</a>
+        <a href="/">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <p class="tag">Product brochure</p>
+      <h1>One-line pitch</h1>
+      <p class="sub">NOC Hive is an AI NOC brain for data center operators: it ingests alerts from your DCIM, BMS, and ticketing systems, triages with an LLM, then acknowledges, remediates via API where safe, or escalates to your on-site team—so you get 24/7 incident response without a 24/7 human NOC.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="/noc/#demo">Request a demo</a>
+        <a class="btn btn-secondary" href="/noc/manual.html">Technical manual</a>
+      </div>
+    </section>
+
+    <section class="wrap brochure-section">
+      <h2>The problem</h2>
+      <ul>
+        <li><strong>Missed or delayed alerts</strong> — Off-hours coverage is thin; critical events slip through.</li>
+        <li><strong>Inconsistent triage</strong> — Different operators handle the same alert differently; playbooks are applied unevenly.</li>
+        <li><strong>Handoff gaps</strong> — Escalations lack context; on-site teams waste time reconstructing what happened.</li>
+        <li><strong>Cost of a real 24/7 NOC</strong> — Staffing around the clock is expensive and hard to sustain for single-site or mid-size operators.</li>
+      </ul>
+    </section>
+
+    <section class="wrap brochure-section" style="background: var(--bg-elevated); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+      <h2>The solution</h2>
+      <p>One AI brain that plugs into your existing stack. NOC Hive <strong>ingests</strong> alerts and optional metrics from DCIM, BMS, and ticketing; <strong>triages</strong> with an LLM that can read detail and apply playbooks; and <strong>acts</strong> by acknowledging alerts, running allowed remediations (resets, setpoints), creating and updating tickets, and notifying. It never does physical work—it escalates with clear instructions so your on-site team knows exactly what to do.</p>
+    </section>
+
+    <section class="wrap brochure-section">
+      <h2>How it works (high level)</h2>
+      <p><strong>1. Ingest</strong> — On a schedule (e.g. every 1–5 minutes) or via webhook, the hive reads open alerts, optional metrics, and open tickets from your integrations. Data is normalized so the brain sees a single view.</p>
+      <p><strong>2. Triage</strong> — The LLM reasons over context (active incidents, playbooks) and uses tools to read more detail, then decides: acknowledge and remediate, or acknowledge and create/update a ticket and notify.</p>
+      <p><strong>3. Act</strong> — Tools call your systems: acknowledge in DCIM/BMS, run an allowed remediation, create or update a ticket, send a notification. Outcomes are persisted for audit and debugging.</p>
+      <p>No rip-and-replace. You keep your Vertiv, Schneider, ServiceNow, Grafana, PagerDuty—we add the brain on top.</p>
+    </section>
+
+    <section class="wrap brochure-section" style="background: var(--bg-elevated); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+      <h2>Why NOC Hive</h2>
+      <ul>
+        <li><strong>Lower MTTR</strong> — Automated triage and safe remediations (resets, setpoints) cut time-to-resolution for routine events.</li>
+        <li><strong>24/7 consistency</strong> — Same playbooks and escalation rules every hour; no fatigue, no turnover gaps.</li>
+        <li><strong>Safe rollout</strong> — Start in <strong>shadow mode</strong>: the hive triages and writes outcomes but does not touch live systems. Compare to your human NOC, then enable acknowledge and tickets, then add remediation for an allow-listed set of procedures.</li>
+        <li><strong>Built for colo, enterprise, and hyperscale</strong> — Designed for data center incident response; integrates with DCIM, BMS, and ticketing from day one.</li>
+      </ul>
+    </section>
+
+    <section class="wrap brochure-section">
+      <h2>Integrations</h2>
+      <ul>
+        <li><strong>DCIM / BMS / SCADA</strong> — Alerts, assets, and (where supported) remediation APIs (e.g. Vertiv, Schneider).</li>
+        <li><strong>Ticketing</strong> — ServiceNow, Jira: read open tickets, create and update incidents with full context.</li>
+        <li><strong>Alerting and metrics</strong> — Grafana, PagerDuty; webhook to trigger a triage cycle on demand.</li>
+        <li><strong>Notifications</strong> — Slack, Teams, email via webhooks.</li>
+      </ul>
+      <p>Adapters map vendor APIs to a single tool set; you add new systems by implementing the adapter contract.</p>
+    </section>
+
+    <section class="wrap brochure-section" style="background: var(--bg-elevated); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+      <h2>Rollout (phases)</h2>
+      <ul>
+        <li><strong>Phase 1 — Shadow:</strong> Hive runs triage and writes outcomes only; no acknowledge, remediation, or ticket calls hit production. Use this to validate logic and compare to human NOC.</li>
+        <li><strong>Phase 2 — Acknowledge + ticket:</strong> Enable acknowledge_alert, create_ticket, update_ticket. Keep remediation off until you're confident.</li>
+        <li><strong>Phase 3 — Remediation:</strong> Add procedure IDs to an allow-list; the hive can run only those (e.g. reset PDU, adjust setpoint). Monitor and expand the list over time.</li>
+      </ul>
+    </section>
+
+    <section class="wrap brochure-section">
+      <h2>Get started</h2>
+      <p>Request a demo or see the product in action: <a href="/noc/">NOC Hive landing</a> and <a href="/noc/#demo">Request demo</a>. Operators and architects: read the <a href="/noc/manual.html">technical user manual</a> for setup, configuration, running a single cycle, 24/7 scheduler, and rollout phases.</p>
+      <div class="ctas" style="margin-top: 1.5rem;">
+        <a class="btn btn-primary" href="/noc/#demo">Request a demo</a>
+        <a class="btn btn-secondary" href="/noc/manual.html">Technical manual</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <a href="/noc/">← Back to NOC Hive</a>
+    <div>
+      <a href="/noc/manual.html">Manual</a>
+      <span style="color: var(--fg-muted); margin: 0 0.5rem;">·</span>
+      <a href="https://github.com/log-wade/hive-mind-agent">GitHub</a>
+    </div>
+  </footer>
+</body>
+</html>
