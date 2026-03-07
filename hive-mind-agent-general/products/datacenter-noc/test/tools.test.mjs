@@ -23,7 +23,7 @@ describe('createTools', () => {
     const adapter = createMockAdapter();
     const tools = createTools(adapter);
     const alerts = await tools.read_alerts({});
-    await assert.doesNotReject(tools.acknowledge_alert('mock', alerts[0].id));
+    await assert.doesNotReject(tools.acknowledge_alert({ source: 'mock', alertId: alerts[0].id }));
   });
 
   it('complete_task returns summary', () => {

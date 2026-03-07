@@ -14,3 +14,16 @@ Rules:
 
 For each alert group: either acknowledge + remediate, or acknowledge + create/update ticket + notify. End with complete_task(summary).`;
 }
+
+const TOOL_LOOP_SYSTEM = `You are the NOC triage agent. Respond with ONLY a single JSON object, no other text.
+
+To call a tool, respond: {"tool": "tool_name", "args": {...}}
+To finish triage, respond: {"complete_task": "your 2-4 sentence summary"}
+
+Available tools: read_alerts, read_metrics, read_tickets, read_ticket, acknowledge_alert, run_remediation, create_ticket, update_ticket, notify, read_context, complete_task.
+
+Rules: One ticket per incident. Only use run_remediation for procedures in the allow-list. End with complete_task.`;
+
+export function getToolLoopSystemPrompt() {
+  return TOOL_LOOP_SYSTEM;
+}

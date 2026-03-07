@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * NOC cycle: ingest alerts, single-turn LLM triage, write outcome.
+ * NOC cycle: ingest alerts, triage with LLM tool loop, write outcome.
  * Usage: HIVE_ROOT=/path node runner.mjs
  */
 
@@ -9,14 +9,40 @@ import { loadConfig, createLLMProvider, writeOutcome } from '../../core/index.mj
 import { readContext, writeContext } from './context.mjs';
 import { createMockAdapter } from './adapters/mock.mjs';
 import { createTools } from './tools.mjs';
-import { getSystemPrompt } from './prompts.mjs';
+import { getSystemPrompt, getToolLoopSystemPrompt } from './prompts.mjs';
 
 const HIVE_ROOT = resolve(process.env.HIVE_ROOT || process.cwd());
+const MAX_TOOL_TURNS = 30;
+
+function parseJsonResponse(text) {
+  const trimmed = text.trim();
+  const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) return null;
+  try {
+    return JSON.parse(jsonMatch[0]);
+  } catch {
+    return null;
+  }
+}
+
+async function invokeTool(tools, toolName, args = {}) {
+  const fn = tools[toolName];
+  if (typeof fn !== 'function') return { error: `Unknown tool: ${toolName}` };
+  try {
+    const result = await fn(args);
+    return typeof result === 'object' && result !== null ? result : { result };
+  } catch (err) {
+    return { error: err.message };
+  }
+}
 
 export async function runCycle(hiveRoot, config = null) {
   const hiveConfig = config || (await loadConfig(hiveRoot));
   const contextPath = hiveConfig?.contextPath ?? 'context.md';
   const outcomesPath = hiveConfig?.outcomesPath ?? 'outcomes';
+  const nocConfig = hiveConfig?.noc || {};
+  const remediationAllowList = nocConfig.remediationAllowList ?? [];
+  const shadowMode = nocConfig.shadowMode === true;
 
   const llmConfig = hiveConfig?.adapters?.llm;
   if (!llmConfig || llmConfig.type === 'cursor' || !llmConfig.type) {
@@ -29,6 +55,8 @@ export async function runCycle(hiveRoot, config = null) {
     hiveRoot,
     readContext: (root) => readContext(root, contextPath),
     writeContext: (root, content) => writeContext(root, content),
+    remediationAllowList,
+    shadowMode,
   });
 
   let contextSummary = '';
@@ -40,18 +68,39 @@ export async function runCycle(hiveRoot, config = null) {
   }
 
   const alerts = await tools.read_alerts({});
-  const userMessage = `Current context (excerpt):\n${contextSummary}\n\nIngested alerts (${alerts.length}):\n${JSON.stringify(alerts, null, 2)}\n\nTriage these alerts. Summarize your decisions and any recommended actions in 2-4 sentences.`;
+  let prompt = `Current context (excerpt):\n${contextSummary}\n\nIngested alerts (${alerts.length}):\n${JSON.stringify(alerts, null, 2)}\n\nTriage using tools. When done, respond with {"complete_task": "your summary"}.`;
 
-  const response = await llm.complete({
-    prompt: userMessage,
-    systemPrompt: getSystemPrompt(),
-    maxTokens: 2048,
-  });
+  for (let i = 0; i < MAX_TOOL_TURNS; i++) {
+    const response = await llm.complete({
+      prompt,
+      systemPrompt: getToolLoopSystemPrompt(),
+      maxTokens: 1024,
+    });
 
-  const outcomeContent = `# NOC cycle outcome\n\n**Generated:** ${new Date().toISOString()}\n\n## Triage summary\n\n${response}\n`;
+    const parsed = parseJsonResponse(response);
+    if (!parsed) {
+      prompt += `\n\nAssistant (invalid JSON, retry with JSON only):\n${response}`;
+      continue;
+    }
+
+    if (parsed.complete_task != null) {
+      const summary = String(parsed.complete_task);
+      const outcomeContent = `# NOC cycle outcome\n\n**Generated:** ${new Date().toISOString()}\n\n## Triage summary\n\n${summary}\n`;
+      await writeOutcome(hiveRoot, outcomesPath, 'noc-cycle', outcomeContent);
+      return { ok: true, summary };
+    }
+
+    if (parsed.tool && typeof parsed.tool === 'string') {
+      const toolResult = await invokeTool(tools, parsed.tool, parsed.args || {});
+      prompt += `\n\nAssistant:\n${response}\n\nTool result (${parsed.tool}):\n${JSON.stringify(toolResult)}\n\nContinue or respond with {"complete_task": "summary"}.`;
+    } else {
+      prompt += `\n\nAssistant:\n${response}\n\nRespond with a tool call or complete_task.`;
+    }
+  }
+
+  const outcomeContent = `# NOC cycle outcome (incomplete)\n\n**Generated:** ${new Date().toISOString()}\n\nMax tool turns reached; manual review recommended.\n`;
   await writeOutcome(hiveRoot, outcomesPath, 'noc-cycle', outcomeContent);
-
-  return { ok: true, summary: response.slice(0, 500) };
+  return { ok: false, summary: 'Cycle incomplete (max turns)' };
 }
 
 async function main() {

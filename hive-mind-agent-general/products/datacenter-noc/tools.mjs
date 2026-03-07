@@ -24,11 +24,13 @@ export function createTools(adapter, options = {}) {
       return adapter.readTickets(opts);
     },
 
-    async read_ticket(id) {
+    async read_ticket(args = {}) {
+      const id = typeof args === 'object' && args !== null ? args.id : args;
       return adapter.readTicket(id);
     },
 
-    async acknowledge_alert(source, alertId) {
+    async acknowledge_alert(args = {}) {
+      const { source, alertId } = args;
       if (shadowMode) {
         console.log('[shadow] would acknowledge_alert', { source, alertId });
         return { ok: true, shadow: true };
@@ -37,7 +39,8 @@ export function createTools(adapter, options = {}) {
       return { ok: true };
     },
 
-    async run_remediation(procedureId, params = {}) {
+    async run_remediation(args = {}) {
+      const { procedureId, params = {} } = args;
       if (remediationAllowList.length > 0 && !remediationAllowList.includes(procedureId)) {
         return { ok: false, message: 'Procedure not allowed' };
       }
@@ -48,7 +51,8 @@ export function createTools(adapter, options = {}) {
       return adapter.runRemediation(procedureId, params);
     },
 
-    async create_ticket({ title, body, priority, assignee }) {
+    async create_ticket(args = {}) {
+      const { title, body, priority, assignee } = args;
       if (shadowMode) {
         console.log('[shadow] would create_ticket', { title, priority });
         return { id: 'shadow-ticket', shadow: true };
@@ -56,7 +60,8 @@ export function createTools(adapter, options = {}) {
       return adapter.createTicket({ title, body, priority, assignee });
     },
 
-    async update_ticket(id, { body, status }) {
+    async update_ticket(args = {}) {
+      const { id, body, status } = args;
       if (shadowMode) {
         console.log('[shadow] would update_ticket', { id });
         return { ok: true, shadow: true };
@@ -65,7 +70,8 @@ export function createTools(adapter, options = {}) {
       return { ok: true };
     },
 
-    async notify(channel, message) {
+    async notify(args = {}) {
+      const { channel, message } = args;
       if (shadowMode) {
         console.log('[shadow] would notify', { channel, message: message?.slice(0, 80) });
         return { ok: true, shadow: true };
@@ -85,7 +91,8 @@ export function createTools(adapter, options = {}) {
       return { ok: true };
     },
 
-    complete_task(summary) {
+    complete_task(args) {
+      const summary = typeof args === 'object' && args?.summary != null ? args.summary : String(args ?? '');
       return { complete: true, summary };
     },
   };
