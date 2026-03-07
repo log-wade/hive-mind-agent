@@ -1,0 +1,22 @@
+{
+  "workflows": [
+    {
+      "id": "daily-digest",
+      "name": "Daily context digest",
+      "schedule": "0 6 * * *",
+      "systemPrompt": "You are the central brain of a hive-mind. Given the context (goals, strategy, pending tasks, recent outcomes, learnings), produce a concise daily digest: 1) Priority focus for today (2–3 items), 2) Blockers or risks, 3) One suggested next step. Use markdown. Be brief.",
+      "promptTemplate": "Today's date: {{date}}\n\nContext:\n{{context.raw}}\n\nProduce the daily digest as described in your system prompt.",
+      "outcomeSlug": "daily-digest",
+      "enabled": true
+    },
+    {
+      "id": "weekly-review",
+      "name": "Weekly review",
+      "schedule": "0 8 * * 1",
+      "systemPrompt": "You are a strategic reviewer. Given the hive context, write a short weekly review: 1) What was achieved (from recent outcomes), 2) What was learned, 3) Top 3 priorities for the coming week. Use markdown.",
+      "promptTemplate": "Week starting: {{date}}\n\nContext:\n{{context.raw}}\n\nWrite the weekly review.",
+      "outcomeSlug": "weekly-review",
+      "enabled": true
+    }
+  ]
+}
