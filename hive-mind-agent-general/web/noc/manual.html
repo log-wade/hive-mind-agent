@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NOC Hive — Technical User Manual</title>
+  <meta name="description" content="Setup, configuration, and operation of NOC Hive: single cycle, 24/7 scheduler, rollout phases, adapters, and troubleshooting." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08090a;
+      --bg-elevated: #0e1012;
+      --fg: #e8eaed;
+      --fg-muted: #9aa0a6;
+      --accent: #00c896;
+      --accent-dim: rgba(0, 200, 150, 0.15);
+      --border: #1c1f23;
+      --radius: 8px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); z-index: 0; }
+    .wrap { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
+    h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); letter-spacing: -0.02em; margin: 0 0 1rem; }
+    h2 { font-size: 1.375rem; letter-spacing: -0.02em; margin: 0 0 1rem; color: var(--fg); }
+    h3 { font-size: 1rem; margin: 1rem 0 0.5rem; color: var(--fg); }
+    p { color: var(--fg-muted); margin: 0 0 0.75rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav.top {
+      display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; color: var(--fg); }
+    nav .logo:hover { text-decoration: none; color: var(--accent); }
+    nav .links { display: flex; gap: 1.5rem; align-items: center; }
+    nav .links a { color: var(--fg-muted); font-size: 0.9375rem; }
+    nav .links a:hover { color: var(--fg); }
+    .toc { background: var(--bg-elevated); padding: 1.5rem; border-radius: var(--radius); margin: 2rem 0; }
+    .toc h2 { margin-top: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-muted); }
+    .toc ul { list-style: none; padding: 0; margin: 0; }
+    .toc li { margin: 0.35rem 0; }
+    .toc a { color: var(--fg); font-size: 0.9375rem; }
+    .toc a:hover { color: var(--accent); }
+    ul:not(.toc ul) { color: var(--fg-muted); padding-left: 1.25rem; margin: 0 0 0.75rem; }
+    ul:not(.toc ul) li { margin-bottom: 0.35rem; }
+    code { background: var(--bg-elevated); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.9em; color: var(--accent); }
+    footer { padding: 2rem 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer a { color: var(--fg-muted); font-size: 0.875rem; }
+    footer a:hover { color: var(--fg); }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="wrap">
+    <nav class="top">
+      <a class="logo" href="/noc/">NOC Hive</a>
+      <div class="links">
+        <a href="/noc/#demo">Request demo</a>
+        <a href="/noc/brochure.html">Brochure</a>
+        <a href="/noc/manual.html">Manual</a>
+        <a href="/">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section style="border-bottom: none; padding-bottom: 0;">
+      <h1>NOC Hive — Technical User Manual</h1>
+      <p>Setup, configuration, running a single cycle, 24/7 scheduler, rollout phases, adapters, and troubleshooting.</p>
+    </section>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>Contents</h2>
+      <ul>
+        <li><a href="#overview">1. Overview</a></li>
+        <li><a href="#prerequisites">2. Prerequisites</a></li>
+        <li><a href="#quick-start">3. Quick start</a></li>
+        <li><a href="#configuration">4. Configuration</a></li>
+        <li><a href="#running-single-cycle">5. Running a single cycle</a></li>
+        <li><a href="#running-24-7">6. Running 24/7 (scheduler and webhook)</a></li>
+        <li><a href="#rollout-phases">7. Rollout phases</a></li>
+        <li><a href="#adapters">8. Adapters and integrations</a></li>
+        <li><a href="#tools-and-triage-loop">9. Tools and triage loop</a></li>
+        <li><a href="#outcomes-and-context">10. Outcomes and context</a></li>
+        <li><a href="#troubleshooting">11. Troubleshooting</a></li>
+        <li><a href="#reference">12. Reference</a></li>
+      </ul>
+    </nav>
+
+    <section id="overview">
+      <h2>1. Overview</h2>
+      <p>NOC Hive runs a <strong>cycle</strong>: it ingests alerts (and optionally metrics and tickets) from your DCIM, BMS, and ticketing systems; triages them with an LLM that can call tools to read more detail, acknowledge alerts, run remediations, create or update tickets, and notify; then persists the outcome. The system is designed to run <strong>on a schedule</strong> (e.g. every 1–5 minutes) or <strong>on demand via webhook</strong>. Each cycle reads and optionally updates <strong>context</strong> (active incidents, playbooks) and writes an <strong>outcome</strong> (triage summary and metadata) for audit and debugging. Physical work is never automated—the hive escalates by creating tickets with clear instructions for on-site staff.</p>
+    </section>
+
+    <section id="prerequisites">
+      <h2>2. Prerequisites</h2>
+      <ul>
+        <li><strong>Node.js</strong> 18 or later.</li>
+        <li><strong>Hive root</strong> — A directory containing: <code>context.md</code> (or path set in config) for context storage; <code>hive.config.json</code> (or <code>.hive/config.json</code>) with at least <code>adapters.llm</code> and optional <code>contextPath</code>, <code>outcomesPath</code>.</li>
+        <li><strong>LLM adapter</strong> — In <code>hive.config.json</code>, set <code>adapters.llm</code> to <code>anthropic</code>, <code>openai</code>, or <code>ollama</code>. The NOC cycle does not run with <code>cursor</code> or an unset adapter.</li>
+        <li><strong>API keys</strong> — Set in the environment (e.g. <code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code>) as required by the chosen LLM adapter.</li>
+      </ul>
+    </section>
+
+    <section id="quick-start">
+      <h2>3. Quick start</h2>
+      <ol>
+        <li><strong>Clone or use the repo</strong> — Ensure <code>hive-mind-agent-general</code> is available and that the hive root (e.g. a test directory) has <code>hive.config.json</code> and optional <code>context.md</code>.</li>
+        <li><strong>Set <code>HIVE_ROOT</code></strong> — Point to the hive root: <code>export HIVE_ROOT=/path/to/your/hive/root</code>.</li>
+        <li><strong>Configure LLM</strong> — In the hive root’s <code>hive.config.json</code>, set <code>"adapters": { "llm": { "type": "anthropic" } }</code> (or <code>openai</code> / <code>ollama</code>) and set the corresponding API key in the environment.</li>
+        <li><strong>Run one cycle</strong> — From the repo root: <code>HIVE_ROOT=/path node products/datacenter-noc/runner.mjs</code>. You should see "Cycle complete: …" and an outcome file under the hive root’s outcomes directory.</li>
+        <li><strong>Run 24/7 (optional)</strong> — <code>HIVE_ROOT=/path NOC_CYCLE_INTERVAL_MS=60000 NOC_WEBHOOK_PORT=3743 node products/datacenter-noc/scheduler.mjs</code> to run a cycle every 60 seconds and expose <code>POST /webhook</code> for on-demand cycles.</li>
+      </ol>
+    </section>
+
+    <section id="configuration">
+      <h2>4. Configuration</h2>
+      <h3>hive.config.json</h3>
+      <ul>
+        <li><code>contextPath</code> — Relative path to context file (default: <code>context.md</code>).</li>
+        <li><code>outcomesPath</code> — Relative path to outcomes directory (default: <code>outcomes</code>).</li>
+        <li><code>adapters.llm</code> — Required. Object with <code>type</code>: <code>anthropic</code>, <code>openai</code>, or <code>ollama</code>. API keys are read from the environment.</li>
+      </ul>
+      <h3>NOC config (noc.config.json or hive.config.noc)</h3>
+      <ul>
+        <li><code>remediationAllowList</code> — Array of procedure IDs the hive is allowed to run via <code>run_remediation</code>. Default: <code>[]</code>.</li>
+        <li><code>shadowMode</code> — If <code>true</code>, the hive never calls acknowledge, remediation, create_ticket, update_ticket, or notify on real systems. Default: <code>true</code>.</li>
+        <li><code>notifyChannels</code> — Optional map of channel names to config (e.g. webhook URLs).</li>
+      </ul>
+      <h3>Environment</h3>
+      <p><code>HIVE_ROOT</code> — Required when running runner or scheduler. <code>ANTHROPIC_API_KEY</code> (or <code>OPENAI_API_KEY</code>, etc.) — Set for the LLM adapter in use.</p>
+    </section>
+
+    <section id="running-single-cycle">
+      <h2>5. Running a single cycle</h2>
+      <p><strong>Command:</strong> <code>HIVE_ROOT=/path/to/hive node products/datacenter-noc/runner.mjs</code> (run from the repository root).</p>
+      <p><strong>What it does:</strong> (1) Loads hive config and NOC config. (2) Creates the LLM provider and the adapter (mock). (3) Builds tools with adapter, context read/write, <code>remediationAllowList</code>, and <code>shadowMode</code>. (4) Reads context and ingests alerts. (5) Runs the tool loop until the LLM returns <code>complete_task(summary)</code> or the turn limit. (6) Writes an outcome (slug: <code>noc-cycle</code>) and exits. Success: "Cycle complete: …"; failure: error message and exit code 1.</p>
+    </section>
+
+    <section id="running-24-7">
+      <h2>6. Running 24/7 (scheduler and webhook)</h2>
+      <p><strong>Command:</strong> <code>HIVE_ROOT=/path NOC_CYCLE_INTERVAL_MS=60000 NOC_WEBHOOK_PORT=3743 node products/datacenter-noc/scheduler.mjs</code></p>
+      <ul>
+        <li><code>NOC_CYCLE_INTERVAL_MS</code> — Milliseconds between cycles (default: 60000).</li>
+        <li><code>NOC_WEBHOOK_PORT</code> — If set, the scheduler exposes <strong>POST /webhook</strong> to trigger one cycle immediately. Secure the endpoint in production.</li>
+      </ul>
+      <p>The scheduler runs cycles in a loop; each cycle is the same as running <code>runner.mjs</code> once.</p>
+    </section>
+
+    <section id="rollout-phases">
+      <h2>7. Rollout phases</h2>
+      <ul>
+        <li><strong>Phase 1 — Shadow:</strong> Set <code>shadowMode: true</code>. Triage and outcomes only; no real system calls.</li>
+        <li><strong>Phase 2 — Acknowledge + ticket:</strong> Set <code>shadowMode: false</code>. Enable acknowledge and create/update tickets. Keep <code>remediationAllowList</code> empty.</li>
+        <li><strong>Phase 3 — Remediation:</strong> Add allowed procedure IDs to <code>remediationAllowList</code>. Monitor and expand over time.</li>
+      </ul>
+    </section>
+
+    <section id="adapters">
+      <h2>8. Adapters and integrations</h2>
+      <p>The <strong>adapter contract</strong> (see <code>products/datacenter-noc/adapters/index.mjs</code>) defines: <code>readAlerts</code>, <code>readMetrics</code>, <code>readAssets</code>, <code>readTickets</code>, <code>readTicket</code>, <code>acknowledgeAlert</code>, <code>runRemediation</code>, <code>createTicket</code>, <code>updateTicket</code>. The <strong>mock adapter</strong> implements the contract with in-memory data. To add a real integration (e.g. Vertiv, ServiceNow): implement the contract in a new file, register in <code>runner.mjs</code>, and keep API keys in the environment.</p>
+    </section>
+
+    <section id="tools-and-triage-loop">
+      <h2>9. Tools and triage loop</h2>
+      <p>Tools exposed to the LLM: <code>read_alerts</code>, <code>read_metrics</code>, <code>read_assets</code>, <code>read_tickets</code>, <code>read_ticket</code>, <code>acknowledge_alert</code>, <code>run_remediation</code>, <code>create_ticket</code>, <code>update_ticket</code>, <code>notify</code>, <code>read_context</code>, <code>write_context</code>, <code>complete_task(summary)</code>. In shadow mode, write tools return <code>{ shadow: true }</code> and do not call the adapter. <code>run_remediation</code> checks <code>remediationAllowList</code>. The loop runs for up to <strong>MAX_TOOL_TURNS</strong> (30) iterations; the LLM should respond with <code>{"complete_task": "summary"}</code> to end the cycle.</p>
+    </section>
+
+    <section id="outcomes-and-context">
+      <h2>10. Outcomes and context</h2>
+      <p><strong>Outcomes</strong> — Written under the hive root’s <code>outcomesPath</code> (default: <code>outcomes</code>). NOC uses the slug <code>noc-cycle</code>; the file name is generated by the core store (typically slug + timestamp). Use <code>listOutcomes</code> / <code>readOutcome</code> to inspect.</p>
+      <p><strong>Context</strong> — Stored at <code>contextPath</code> (default: <code>context.md</code>). The hive reads and writes via <code>read_context</code> and <code>write_context</code> for continuity across cycles.</p>
+    </section>
+
+    <section id="troubleshooting">
+      <h2>11. Troubleshooting</h2>
+      <ul>
+        <li><strong>"Set adapters.llm in hive.config.json"</strong> — Set <code>adapters.llm.type</code> to <code>anthropic</code>, <code>openai</code>, or <code>ollama</code>.</li>
+        <li><strong>Cycle incomplete (max turns)</strong> — LLM did not return <code>complete_task</code> in time. Check prompts/model or increase <code>MAX_TOOL_TURNS</code> in <code>runner.mjs</code>.</li>
+        <li><strong>Tool errors</strong> — Check adapter and API keys. In shadow mode, write operations do not hit the adapter.</li>
+        <li><strong>No outcomes written</strong> — Ensure hive root is writable and <code>outcomesPath</code> is correct.</li>
+        <li><strong>Shadow mode</strong> — Verify <code>noc.config.json</code> or <code>hive.config.noc</code> has <code>shadowMode: true</code> if you intend shadow-only behavior.</li>
+      </ul>
+    </section>
+
+    <section id="reference">
+      <h2>12. Reference</h2>
+      <ul>
+        <li><a href="https://github.com/log-wade/hive-mind-agent/blob/main/hive-mind-agent-general/docs/plans/2026-03-07-datacenter-noc-hive-design.md">Design doc</a></li>
+        <li><a href="https://github.com/log-wade/hive-mind-agent/blob/main/hive-mind-agent-general/docs/plans/2026-03-07-datacenter-noc-hive-implementation.md">Implementation plan</a></li>
+        <li><a href="https://github.com/log-wade/hive-mind-agent/tree/main/hive-mind-agent-general/products/datacenter-noc">Product tree</a> — runner.mjs, scheduler.mjs, tools.mjs, prompts.mjs, adapters/, context.mjs, noc.config.example.json</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <a href="/noc/">← Back to NOC Hive</a>
+    <div>
+      <a href="/noc/brochure.html">Brochure</a>
+      <span style="color: var(--fg-muted); margin: 0 0.5rem;">·</span>
+      <a href="https://github.com/log-wade/hive-mind-agent">GitHub</a>
+    </div>
+  </footer>
+</body>
+</html>
