@@ -31,7 +31,8 @@
     "workflows": "node workflows/runner.mjs",
     "workflows:run": "node workflows/runner.mjs",
     "pack": "npm pack --dry-run",
-    "skill:install": "node scripts/install-skill.mjs"
+    "skill:install": "node scripts/install-skill.mjs",
+    "build": "echo 'Static site in web/'"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.26.0",
