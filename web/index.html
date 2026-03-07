@@ -4,26 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hive Mind Agent — NOC Hive</title>
+  <meta name="description" content="Autonomous data center NOC. Operate without a 24/7 human team. AI triages alerts, remediates via API, escalates when physical work is needed." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    :root { --bg: #0f0f12; --fg: #e4e4e7; --accent: #22c55e; --muted: #71717a; }
+    :root { --bg: #08090a; --fg: #e8eaed; --muted: #9aa0a6; --accent: #00c896; --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif; }
     * { box-sizing: border-box; }
-    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
-    h1 { font-size: 1.75rem; font-weight: 700; margin: 0 0 0.5rem; }
-    p { color: var(--muted); max-width: 32ch; text-align: center; margin: 0 0 1.5rem; line-height: 1.6; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .badge { display: inline-block; background: rgba(34, 197, 94, 0.15); color: var(--accent); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem; margin-bottom: 1rem; }
-    nav { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+    body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; font-family: var(--font-body); background: var(--bg); color: var(--fg); text-align: center; }
+    h1 { font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; margin: 0 0 0.5rem; }
+    p { color: var(--muted); max-width: 36ch; margin: 0 0 1.5rem; line-height: 1.6; }
+    .btn { display: inline-block; font-family: var(--font-body); font-weight: 600; font-size: 0.9375rem; padding: 0.75rem 1.5rem; border-radius: 8px; background: var(--accent); color: var(--bg); text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,200,150,0.25); }
+    .secondary { margin-left: 0.75rem; background: transparent; color: var(--accent); border: 1px solid rgba(0,200,150,0.4); }
+    .secondary:hover { background: rgba(0,200,150,0.1); }
+    footer { margin-top: 3rem; font-size: 0.875rem; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
-  <span class="badge">Live</span>
   <h1>Hive Mind Agent</h1>
-  <p>Model-agnostic multi-agent orchestration for Cursor, CLI, MCP, and API. Datacenter NOC Hive: autonomous incident response with DCIM/BMS/ticketing.</p>
-  <nav>
-    <a href="https://github.com/log-wade/hive-mind-agent#readme">GitHub</a>
-    <a href="https://github.com/log-wade/hive-mind-agent/blob/main/docs/plans/2026-03-07-datacenter-noc-hive-design.md">NOC design</a>
-    <a href="https://github.com/log-wade/hive-mind-agent/tree/main/products/datacenter-noc">NOC product</a>
-  </nav>
+  <p>Autonomous data center NOC. One AI brain ingests your DCIM and ticketing, triages alerts, and escalates only when physical work is needed.</p>
+  <div>
+    <a class="btn" href="/noc/">See NOC Hive →</a>
+    <a class="btn secondary" href="/noc/#demo">Request demo</a>
+  </div>
+  <footer>
+    <a href="https://github.com/log-wade/hive-mind-agent">GitHub</a>
+    <span style="color: var(--muted); margin: 0 0.5rem;">·</span>
+    <a href="/noc/">NOC product</a>
+  </footer>
 </body>
 </html>
