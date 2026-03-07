@@ -1,0 +1,16 @@
+{
+  "name": "@hive-mind/datacenter-noc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "NOC hive: ingest, triage, act on DCIM/BMS/ticketing",
+  "main": "runner.mjs",
+  "scripts": {
+    "noc:cycle": "node runner.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
