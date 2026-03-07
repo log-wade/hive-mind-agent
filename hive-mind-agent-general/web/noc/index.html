@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NOC Hive — Autonomous Data Center Operations</title>
+  <meta name="description" content="Operate your data center without a 24/7 human NOC. AI triages alerts, remediates via API, escalates only when physical work is needed. Integrates with DCIM, BMS, ticketing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08090a;
+      --bg-elevated: #0e1012;
+      --fg: #e8eaed;
+      --fg-muted: #9aa0a6;
+      --accent: #00c896;
+      --accent-dim: rgba(0, 200, 150, 0.15);
+      --border: #1c1f23;
+      --radius: 8px;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .noise { position: fixed; inset: 0; pointer-events: none; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); z-index: 0; }
+    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 4.5rem 0; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
+    h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 1rem; }
+    h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); letter-spacing: -0.02em; margin: 0 0 1.5rem; }
+    h3 { font-size: 1.125rem; margin: 0 0 0.5rem; }
+    p { color: var(--fg-muted); margin: 0 0 1rem; max-width: 52ch; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .tag { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 1rem; }
+    .btn {
+      display: inline-block; font-family: var(--font-body); font-weight: 600; font-size: 0.9375rem;
+      padding: 0.75rem 1.5rem; border-radius: var(--radius); border: none; cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,200,150,0.25); text-decoration: none; }
+    .btn-secondary { background: var(--accent-dim); color: var(--accent); }
+    .btn-secondary:hover { background: rgba(0,200,150,0.25); text-decoration: none; }
+    /* Nav */
+    nav {
+      display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; color: var(--fg); }
+    nav .logo:hover { text-decoration: none; color: var(--accent); }
+    nav .links { display: flex; gap: 1.5rem; align-items: center; }
+    nav .links a { color: var(--fg-muted); font-size: 0.9375rem; }
+    nav .links a:hover { color: var(--fg); }
+    /* Hero */
+    .hero { padding: 5rem 0 6rem; text-align: left; }
+    .hero h1 { max-width: 16ch; }
+    .hero .sub { font-size: 1.25rem; color: var(--fg-muted); max-width: 42ch; margin-bottom: 2rem; }
+    .hero .ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+    /* Problem */
+    .problem { background: var(--bg-elevated); }
+    .problem h2 { text-align: center; }
+    .problem .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .problem .card { padding: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius); }
+    .problem .card h3 { color: var(--fg); }
+    .problem .card p { margin: 0; font-size: 0.9375rem; }
+    /* How it works */
+    .how .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2.5rem; }
+    @media (max-width: 700px) { .how .steps { grid-template-columns: 1fr; } }
+    .how .step { position: relative; }
+    .how .step-num { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--accent-dim); line-height: 1; margin-bottom: 0.5rem; }
+    .how .step h3 { color: var(--fg); }
+    .how .step p { font-size: 0.9375rem; margin: 0; }
+    .how .integrations { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .how .integrations p { margin-bottom: 0.5rem; }
+    .how .integrations span { font-size: 0.875rem; color: var(--fg-muted); }
+    /* Why / Proof */
+    .why .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .why .card { padding: 1.5rem; background: var(--bg-elevated); border-radius: var(--radius); border: 1px solid var(--border); }
+    .why .card h3 { color: var(--accent); font-size: 1rem; }
+    .why .card p { margin: 0; font-size: 0.9375rem; }
+    /* Use cases */
+    .use-cases { background: var(--bg-elevated); }
+    .use-cases .list { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
+    .use-cases .pill { padding: 0.5rem 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; font-size: 0.9375rem; color: var(--fg-muted); }
+    .use-cases .pill strong { color: var(--fg); }
+    /* CTA */
+    .funnel-cta { text-align: center; padding: 5rem 0 6rem; }
+    .funnel-cta h2 { margin-bottom: 0.75rem; }
+    .funnel-cta .sub { margin-bottom: 2rem; }
+    .funnel-cta form {
+      max-width: 420px; margin: 0 auto 2rem; text-align: left;
+      display: grid; gap: 1rem;
+    }
+    .funnel-cta input, .funnel-cta textarea {
+      width: 100%; padding: 0.75rem 1rem; font-family: var(--font-body); font-size: 1rem;
+      background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--fg);
+    }
+    .funnel-cta input::placeholder, .funnel-cta textarea::placeholder { color: var(--fg-muted); }
+    .funnel-cta textarea { min-height: 100px; resize: vertical; }
+    .funnel-cta .form-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
+    .funnel-cta .alt { font-size: 0.875rem; color: var(--fg-muted); margin-top: 1rem; }
+    /* Footer */
+    footer { padding: 2rem 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer a { color: var(--fg-muted); font-size: 0.875rem; }
+    footer a:hover { color: var(--fg); }
+    /* Stagger animation */
+    .hero .tag, .hero h1, .hero .sub, .hero .ctas { opacity: 0; animation: fadeUp 0.6s ease forwards; }
+    .hero .tag { animation-delay: 0.05s; }
+    .hero h1 { animation-delay: 0.1s; }
+    .hero .sub { animation-delay: 0.2s; }
+    .hero .ctas { animation-delay: 0.35s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="wrap">
+    <nav>
+      <a class="logo" href="/noc/">NOC Hive</a>
+      <div class="links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#why">Why us</a>
+        <a href="/noc/brochure.html">Brochure</a>
+        <a href="/noc/manual.html">Manual</a>
+        <a href="#demo">Request demo</a>
+        <a href="/">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Level 1: Awareness -->
+    <section class="hero wrap">
+      <p class="tag">Autonomous data center operations</p>
+      <h1>Operate without a 24/7 human NOC.</h1>
+      <p class="sub">One AI brain ingests your DCIM, BMS, and ticketing. It triages alerts, remediates via API, and escalates to your team only when physical work is needed.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#demo">Request a demo</a>
+        <a class="btn btn-secondary" href="#how-it-works">See how it works</a>
+      </div>
+    </section>
+
+    <!-- Level 2: Problem (awareness) -->
+    <section class="problem section wrap">
+      <h2>Sound familiar?</h2>
+      <p style="text-align: center; margin-left: auto; margin-right: auto;">Missed alerts. MTTR that depends on who’s on shift. Handoffs that drop context.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Missed or delayed alerts</h3>
+          <p>Overnight and weekend coverage is expensive or thin. Critical alerts can wait until someone checks.</p>
+        </div>
+        <div class="card">
+          <h3>Inconsistent triage</h3>
+          <p>Different operators, different playbooks. MTTR and escalation quality vary by shift.</p>
+        </div>
+        <div class="card">
+          <h3>Context lost at handoff</h3>
+          <p>What was tried, what’s pending, and what’s safe to retry often don’t make it into the ticket.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Level 3: Interest — How it works -->
+    <section id="how-it-works" class="how section wrap">
+      <h2>How it works</h2>
+      <p>One orchestrator runs on a schedule and on webhook. It reads your systems, decides, and acts—or escalates with clear instructions.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Ingest</h3>
+          <p>Pulls open alerts and metrics from DCIM, BMS, SCADA, and ticketing via your existing APIs.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Triage</h3>
+          <p>Correlates by asset and time, applies playbooks, and chooses: remediate via API or escalate to physical work.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>Act</h3>
+          <p>Acknowledges alerts, runs allowed procedures (resets, setpoints), creates or updates tickets, and notifies when humans need to step in.</p>
+        </div>
+      </div>
+      <div class="integrations">
+        <p><strong>Integrates with</strong></p>
+        <span>Vertiv · Schneider · ServiceNow · Jira · Grafana · PagerDuty · and APIs you already use.</span>
+      </div>
+    </section>
+
+    <!-- Level 4: Consideration — Why / Proof -->
+    <section id="why" class="why section wrap">
+      <h2>Why NOC Hive</h2>
+      <p>Built to be better than a human NOC for incident response: lower MTTR, 24/7 consistency, and safe rollout with shadow mode.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Lower MTTR</h3>
+          <p>Auto-remediate where your BMS/DCIM allows. Fewer alerts wait for the next shift.</p>
+        </div>
+        <div class="card">
+          <h3>24/7 consistency</h3>
+          <p>Same playbooks and logic every hour. No fatigue, no handoff gaps.</p>
+        </div>
+        <div class="card">
+          <h3>Escalate only when needed</h3>
+          <p>Physical work stays with your team. The hive creates tickets with clear, actionable instructions.</p>
+        </div>
+        <div class="card">
+          <h3>Safe rollout</h3>
+          <p>Shadow mode: triage and recommend without acting. Turn on acknowledge and remediation when you’re ready.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use cases -->
+    <section class="use-cases section wrap">
+      <h2>Built for</h2>
+      <div class="list">
+        <span class="pill"><strong>Colo</strong> — Multi-tenant NOC without scaling headcount</span>
+        <span class="pill"><strong>Enterprise</strong> — Single site or campus, 24/7 coverage</span>
+        <span class="pill"><strong>Hyperscale / critical</strong> — First line of defense, humans for physical</span>
+      </div>
+    </section>
+
+    <!-- Level 5: Decision — CTA -->
+    <section id="demo" class="funnel-cta section wrap">
+      <h2>Request a demo</h2>
+      <p class="sub">Tell us about your stack and we’ll show you NOC Hive in action.</p>
+      <form id="demo-form" action="#" method="post">
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Work email" required />
+        <input type="text" name="company" placeholder="Company" />
+        <textarea name="message" placeholder="Current DCIM/BMS/ticketing (e.g. Vertiv, ServiceNow) and what you’d like to see"></textarea>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Send request</button>
+          <a class="btn btn-secondary" href="mailto:?subject=NOC%20Hive%20demo%20request">Email us instead</a>
+        </div>
+      </form>
+      <p class="alt">No spam. We’ll respond within 1–2 business days.</p>
+      <p class="alt" style="margin-top: 0.5rem;">Download the <a href="/noc/brochure.html">product brochure</a> or read the <a href="/noc/manual.html">technical manual</a>.</p>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <a href="/">← Home</a>
+    <div>
+      <a href="/noc/brochure.html">Brochure</a>
+      <span style="color: var(--fg-muted); margin: 0 0.5rem;">·</span>
+      <a href="/noc/manual.html">Manual</a>
+      <span style="color: var(--fg-muted); margin: 0 0.5rem;">·</span>
+      <a href="https://github.com/log-wade/hive-mind-agent/tree/main/hive-mind-agent-general/products/datacenter-noc">GitHub</a>
+      <span style="color: var(--fg-muted); margin: 0 0.5rem;">·</span>
+      <a href="https://github.com/log-wade/hive-mind-agent/blob/main/hive-mind-agent-general/docs/plans/2026-03-07-datacenter-noc-hive-design.md">Design doc</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('demo-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var name = this.name.value;
+      var email = this.email.value;
+      var company = this.company.value || '';
+      var message = this.message.value || '';
+      var body = 'Name: ' + name + '\nEmail: ' + email + '\nCompany: ' + company + '\n\n' + message;
+      window.location.href = 'mailto:?subject=NOC%20Hive%20demo%20request&body=' + encodeURIComponent(body);
+    });
+  </script>
+</body>
+</html>
