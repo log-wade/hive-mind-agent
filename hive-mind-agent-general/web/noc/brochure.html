@@ -70,6 +70,11 @@
     footer { padding: 2rem 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     footer a { color: var(--fg-muted); font-size: 0.875rem; }
     footer a:hover { color: var(--fg); }
+    @media print {
+      nav, footer, .noise, button { display: none !important; }
+      body { background: #fff; color: #111; }
+      a { color: #0066cc; }
+    }
   </style>
 </head>
 <body>
@@ -94,6 +99,7 @@
       <div class="ctas">
         <a class="btn btn-primary" href="/noc/#demo">Request a demo</a>
         <a class="btn btn-secondary" href="/noc/manual.html">Technical manual</a>
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print / Save as PDF</button>
       </div>
     </section>
 
@@ -156,7 +162,9 @@
       <div class="ctas" style="margin-top: 1.5rem;">
         <a class="btn btn-primary" href="/noc/#demo">Request a demo</a>
         <a class="btn btn-secondary" href="/noc/manual.html">Technical manual</a>
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print / Save as PDF</button>
       </div>
+      <p style="font-size: 0.875rem; margin-top: 1rem;">Use your browser’s Print → Save as PDF to download.</p>
     </section>
   </main>
 
