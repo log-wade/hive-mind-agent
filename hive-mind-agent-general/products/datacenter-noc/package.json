@@ -7,6 +7,7 @@
   "main": "runner.mjs",
   "scripts": {
     "noc:cycle": "node runner.mjs",
+    "noc:scheduler": "node scheduler.mjs",
     "test": "node --test test/*.test.mjs"
   },
   "dependencies": {},

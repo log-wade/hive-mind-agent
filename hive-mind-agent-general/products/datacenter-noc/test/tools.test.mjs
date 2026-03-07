@@ -33,4 +33,19 @@ describe('createTools', () => {
     assert.strictEqual(out.complete, true);
     assert.strictEqual(out.summary, 'Triage done.');
   });
+
+  it('run_remediation with procedureId not in allowList returns ok: false', async () => {
+    const adapter = createMockAdapter();
+    const tools = createTools(adapter, { remediationAllowList: ['allowed-1'] });
+    const out = await tools.run_remediation({ procedureId: 'not-allowed', params: {} });
+    assert.strictEqual(out.ok, false);
+    assert(/not allowed/i.test(out.message || ''));
+  });
+
+  it('create_ticket in shadowMode returns shadow: true', async () => {
+    const adapter = createMockAdapter();
+    const tools = createTools(adapter, { shadowMode: true });
+    const out = await tools.create_ticket({ title: 'Test', body: 'Body', priority: 'high' });
+    assert.strictEqual(out.shadow, true);
+  });
 });

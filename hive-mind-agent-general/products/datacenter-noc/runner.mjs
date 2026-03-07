@@ -40,7 +40,16 @@ export async function runCycle(hiveRoot, config = null) {
   const hiveConfig = config || (await loadConfig(hiveRoot));
   const contextPath = hiveConfig?.contextPath ?? 'context.md';
   const outcomesPath = hiveConfig?.outcomesPath ?? 'outcomes';
-  const nocConfig = hiveConfig?.noc || {};
+  let nocConfig = hiveConfig?.noc || {};
+  try {
+    const { readFile } = await import('fs/promises');
+    const { join } = await import('path');
+    const nocPath = join(hiveRoot, 'noc.config.json');
+    const raw = await readFile(nocPath, 'utf-8').catch(() => null);
+    if (raw) nocConfig = { ...nocConfig, ...JSON.parse(raw) };
+  } catch {
+    // use hiveConfig.noc only
+  }
   const remediationAllowList = nocConfig.remediationAllowList ?? [];
   const shadowMode = nocConfig.shadowMode === true;
 
