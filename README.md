@@ -96,3 +96,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Contributions welcome.
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
